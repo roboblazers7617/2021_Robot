@@ -71,22 +71,105 @@ public class Robot extends TimedRobot{
 
   @Override
   public void autonomousPeriodic(){
+	  boolean isRed = false;
+
     if(firstTime == true){
-        m_drive.setSafetyEnabled(false);
-	    m_drive.driveCartesian(0,0.5,0,0);
-	    Timer.delay(1.2);
-	    m_drive.driveCartesian(0,0,-.25,0);
-	    Timer.delay(.2);
-	    m_drive.driveCartesian(0,0,0,0);
-	    shooter.set(.6);
-	    Timer.delay(1.2);
-	    tower.set(.3);
-	    hopper.set(.3);
-	    Timer.delay(5);
-	    shooter.set(0);
-	    tower.set(0);
-	    hopper.set(0);
-	    m_drive.setSafetyEnabled(true);
+		if (isRed == true){
+			//run Red course
+		}
+		else{
+			//run Blue course
+		}
+		//Slalom auto
+		m_drive.setSafetyEnabled(false);
+		m_drive.driveCartesian(0,.25,0);
+		Timer.delay(.7);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
+		//m_drive.driveCartesian(0, 0, -.45);
+		//Timer.delay(.47);
+		m_drive.driveCartesian(-.25, 0, 0);
+		Timer.delay(2.4);
+		m_drive.driveCartesian(0, .25, 0);
+		Timer.delay(.74);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
+		//m_drive.driveCartesian(0, 0, .45);
+		//Timer.delay(.44);
+		//m_drive.driveCartesian(0, .25, 0);
+		//Timer.delay(3);
+		//m_drive.driveCartesian(0, 0, 0);
+		//Timer.delay(2);
+		//m_drive.driveCartesian(0, 0, .45);
+		//Timer.delay(.45);
+		 m_drive.driveCartesian(.25, 0, 0);
+		Timer.delay(1.8);
+		m_drive.driveCartesian(0, .25, 0);
+		Timer.delay(.75);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
+		//m_drive.driveCartesian(0, 0, -.45);
+		//Timer.delay(.47);
+		// m_drive.driveCartesian(0, .25, 0);
+		//  Timer.delay(.75);
+		//  m_drive.driveCartesian(0, 0, 0);
+		// Timer.delay(1);
+		//  m_drive.driveCartesian(0, 0, -.45);
+		//  Timer.delay(.47);
+		//  m_drive.driveCartesian(0, .25, 0);
+		//  Timer.delay(.75);
+		//  m_drive.driveCartesian(0, 0, 0);
+		// Timer.delay(1);
+		// m_drive.driveCartesian(0, 0, -.45);
+		// Timer.delay(.47);
+		// m_drive.driveCartesian(0, .25, 0);
+		// Timer.delay(.75);
+		// m_drive.driveCartesian(0, 0, 0);
+		// Timer.delay(1);
+		// m_drive.driveCartesian(0, 0, -.45);
+		// Timer.delay(.47);
+		// m_drive.driveCartesian(0, .25, 0);
+		// Timer.delay(.74);
+		// m_drive.driveCartesian(0, 0, 0);
+		// Timer.delay(1);
+		// m_drive.driveCartesian(0, 0, .45);
+		// Timer.delay(.49);
+		// m_drive.driveCartesian(0, .25, 0);
+		// Timer.delay(3.1);
+		// m_drive.driveCartesian(0, 0, 0);
+		// Timer.delay(2);
+		// m_drive.driveCartesian(0, 0, .45);
+		// Timer.delay(.46);
+		// m_drive.driveCartesian(0, .25, 0);
+		// Timer.delay(.75);
+		// m_drive.driveCartesian(0, 0, 0);
+		// Timer.delay(1);
+		// m_drive.driveCartesian(0, 0, -.45);
+		// Timer.delay(.48);
+		// m_drive.driveCartesian(0, .25, 0);
+		// Timer.delay(.3);
+		// m_drive.driveCartesian(0, 0, 0);
+		// Timer.delay(1);
+		// m_drive.driveCartesian(0, 0, 0);
+		// Timer.delay(1);
+		 m_drive.driveCartesian(-.25, 0, 0);
+		 Timer.delay(1.8);
+		m_drive.driveCartesian(0, -.25, 0);
+		Timer.delay(.75);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
+		m_drive.driveCartesian(.25, 0, 0);
+		Timer.delay(1.8);
+		m_drive.driveCartesian(0, -.25, 0);
+		Timer.delay(3.2);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
+		m_drive.driveCartesian(-.25, 0, 0);
+		Timer.delay(2.4);
+		m_drive.driveCartesian(0, -.25, 0);
+		Timer.delay(.3);
+		m_drive.driveCartesian(0,0,0);
+		Timer.delay(1);
 	    firstTime = false;
     }
   }
@@ -98,17 +181,17 @@ public class Robot extends TimedRobot{
 		flipped = -flipped;
 	}
 
-	  double x = stick1.getRawAxis(LEFT_JOYSTICK_HORIZONTAL) * -1;
-	  double y = stick1.getRawAxis(LEFT_JOYSTICK_VERTICAL);
+	  double x = stick1.getRawAxis(LEFT_JOYSTICK_HORIZONTAL)*.5;
+	  double y = stick1.getRawAxis(LEFT_JOYSTICK_VERTICAL)*-1 *.5;
 	  //right trigger rotates clockwise, left trigger rotates counterclockwise. if both are depressed, no rotation
-	  double z = (stick1.getRawAxis(LEFT_TRIGGER) > 0 && stick1.getRawAxis(RIGHT_TRIGGER) > 0) ? 0.0 : stick1.getRawAxis(LEFT_TRIGGER) * .5 + stick1.getRawAxis(RIGHT_TRIGGER) * -.5;
+	  double z = (stick1.getRawAxis(RIGHT_TRIGGER) > 0 && stick1.getRawAxis(LEFT_TRIGGER) > 0) ? 0.0 : stick1.getRawAxis(RIGHT_TRIGGER) * .5 + stick1.getRawAxis(LEFT_TRIGGER) * -.5;
 
 	  m_drive.driveCartesian(x, y, z, 0.0);
 
-	  if (stick1.getRawButton(LEFT_BUMPER)){
+	  if (stick1.getRawButton(X_BUTTON)){
 		  intake.set(.5);
 	  }
-	  else if (stick1.getRawButton(RIGHT_BUMPER)){
+	  else if (stick1.getRawButton(B_BUTTON)){
 		  intake.set(-.5);
 	  }
 	  else{
@@ -124,24 +207,36 @@ public class Robot extends TimedRobot{
 	  else{
 		  tower.set(0);
 	  }
-
-    if (stick2.getRawButton(RIGHT_BUMPER)) {
-		  shooter.set(-.55);
-		  shooterLeft.set(.55);
+    if (stick2.getRawButton(A_BUTTON)) {
+		//For-the-10/15-distance
+		shooter.set(.4);
+		  shooterLeft.set(-.4);
 	  }
-	  else if (stick2.getRawAxis(RIGHT_TRIGGER) > 0) {
-			shooter.set(.55);
-			shooterLeft.set(-.55);
+	  else if (stick2.getRawButton(X_BUTTON)) {
+		//Farther Distances
+		shooter.set(.29);
+		shooterLeft.set(-.29);
+	  }
+	  else if (stick2.getRawButton(Y_BUTTON)){
+		  //15 Distance?
+		  shooter.set(.29);
+		  shooterLeft.set(-.29);
+	  }
+	  else if (stick2.getRawButton(B_BUTTON)){
+		  //25?????
+		  shooter.set(.3);
+		  shooterLeft.set(-.3);
 	  }
 	  else {
 		  shooter.set(0);
 		  shooterLeft.set(0);
 	  }
 
-	  if (stick2.getRawButton(A_BUTTON)){
+
+	  if (stick2.getRawButton(RIGHT_BUMPER)){
 		  hopper.set(.5);
 	  }
-	  else if (stick2.getRawButton(X_BUTTON)){
+	  else if (stick2.getRawAxis(RIGHT_TRIGGER) > 0){
 		  hopper.set(-.5);
 	  }
 	  else{

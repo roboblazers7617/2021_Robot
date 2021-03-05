@@ -2,21 +2,33 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.wpilibj.SendableBase;
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.AnalogInput;
-
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.SPI;
 import java.lang.System;
+import java.lang.Math;
 
 //the A button is
 
+
 public class Robot extends TimedRobot{
+	AHRS ahrs = new AHRS (SPI.Port.kMXP);
+	PIDController turnController;
+	double rotatetoAngleRate;
+	static final double kP = 0.0f;
+	static final double kI =  0.0f;
+	static final double kD =  0.0f;
+	static final double kF =  0.0f;
+	static final double kToleranceDegrees = 0.0f;
 	private static final int A_BUTTON = 1;
 	private static final int B_BUTTON = 2;
 	private static final int X_BUTTON = 3;
@@ -38,7 +50,7 @@ public class Robot extends TimedRobot{
 	//not changing -- pwm port 4
 	PWMVictorSPX hopper = new PWMVictorSPX(2);
 	// not changing -- pwm port 2
-	  CANSparkMax shooter = new CANSparkMax(1, MotorType.kBrushless);
+	CANSparkMax shooter = new CANSparkMax(1, MotorType.kBrushless);
 	//  spark max port 1
 	CANSparkMax frontLeft = new CANSparkMax(8, MotorType.kBrushless);
 	// spark max port 8
@@ -61,6 +73,21 @@ public class Robot extends TimedRobot{
 
 	AnalogInput testinput = new AnalogInput(0);
 	
+	void testingDynamicCorrection(float time){
+		ahrs.reset();
+		for(float x=0;x<time;x+=.01){
+			System.out.println(ahrs.getAngle());
+			if(Math.abs(ahrs.getAngle())>0){
+				m_drive.driveCartesian(.25, 0, -ahrs.getAngle()/50);
+				
+				// m_drive.driveCartesian(.25, 0, 0);
+			}
+			else{
+				m_drive.driveCartesian(.25, 0, 0);
+			}
+			Timer.delay(.01);
+		}
+	}
 
   @Override
   public void robotInit(){
@@ -73,6 +100,7 @@ public class Robot extends TimedRobot{
   public void autonomousPeriodic(){
 	  boolean isRed = false;
 
+		
     if(firstTime == true){
 		if (isRed == true){
 			//run Red course
@@ -80,34 +108,67 @@ public class Robot extends TimedRobot{
 		else{
 			//run Blue course
 		}
+		
+		m_drive.setSafetyEnabled(false);
+
+		// //Gree
+	
+		}
+
+		ahrs.reset();
+		// testingDynamicCorrection(7);
+		// // ahrs.reset();
+		// // m_drive.driveCartesian(.25, 0, 0, ahrs.getAngle());
+		// // Timer.delay(7);
+		// m_drive.driveCartesian(0, 0, 0);
+// m_drive.driveCartesian(.25, 0, 0);
+// Timer.delay(7);
+// m_drive.driveCartesian(0, 0, 0);
+// Timer.delay(0);
+
+		m_drive.setSafetyEnabled(false);
+		ahrs.reset();
 		//Slalom auto
 		m_drive.setSafetyEnabled(false);
-		m_drive.driveCartesian(0,.25,0);
+		m_drive.driveCartesian(0, .25, 0);
 		Timer.delay(.7);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
-		//m_drive.driveCartesian(0, 0, -.45);
-		//Timer.delay(.47);
+		// m_drive.driveCartesian(0, 0, -.45);
+		// Timer.delay(.47);
 		m_drive.driveCartesian(-.25, 0, 0);
-		Timer.delay(2.4);
+		Timer.delay(2);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(.1);
+		m_drive.driveCartesian(0, 0, .45);
+		Timer.delay(Math.abs(ahrs.getAngle()/200.0f));
 		m_drive.driveCartesian(0, .25, 0);
-		Timer.delay(.74);
+		Timer.delay(3.5);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
-		//m_drive.driveCartesian(0, 0, .45);
-		//Timer.delay(.44);
-		//m_drive.driveCartesian(0, .25, 0);
-		//Timer.delay(3);
-		//m_drive.driveCartesian(0, 0, 0);
-		//Timer.delay(2);
-		//m_drive.driveCartesian(0, 0, .45);
-		//Timer.delay(.45);
-		 m_drive.driveCartesian(.25, 0, 0);
-		Timer.delay(1.8);
+		//Turns
+		// m_drive.driveCartesian(0, 0, .45);
+		// Timer.delay(.44);
+		// m_drive.driveCartesian(0, .25, 0);
+		// Timer.delay(3);
+		// m_drive.driveCartesian(0, 0, 0);
+		// Timer.delay(2);
+		// m_drive.driveCartesian(0, -.25, 0);
+		// Timer.delay(.1);
+		// m_drive.driveCartesian(0,0,0);
+		// Timer.delay(1);
+		// //m_drive.driveCartesian(0, 0, .45);
+		// //Timer.delay(.45);
+		 testingDynamicCorrection(1.8f);
+		 m_drive.driveCartesian(0, 0, 0);
+		 Timer.delay(.1);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
 		m_drive.driveCartesian(0, .25, 0);
 		Timer.delay(.75);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
+		//turns
 		//m_drive.driveCartesian(0, 0, -.45);
 		//Timer.delay(.47);
 		// m_drive.driveCartesian(0, .25, 0);
@@ -153,36 +214,46 @@ public class Robot extends TimedRobot{
 		// m_drive.driveCartesian(0, 0, 0);
 		// Timer.delay(1);
 		 m_drive.driveCartesian(-.25, 0, 0);
-		 Timer.delay(1.8);
+		 Timer.delay(2);
+		 m_drive.driveCartesian(0, 0, .45);
+		 Timer.delay(Math.abs(ahrs.getAngle()/200.0f));
 		m_drive.driveCartesian(0, -.25, 0);
 		Timer.delay(.75);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
-		m_drive.driveCartesian(.25, 0, 0);
-		Timer.delay(1.8);
+		testingDynamicCorrection(1.8f);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(.1);
+		m_drive.driveCartesian(0, 0, .45);
+		Timer.delay(Math.abs(ahrs.getAngle()/200.0f));
 		m_drive.driveCartesian(0, -.25, 0);
-		Timer.delay(3.2);
+		Timer.delay(3.5);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
 		m_drive.driveCartesian(-.25, 0, 0);
 		Timer.delay(2.4);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(.1);
+		m_drive.driveCartesian(0, 0, .45);
+		Timer.delay(Math.abs(ahrs.getAngle()/200.0f));
 		m_drive.driveCartesian(0, -.25, 0);
 		Timer.delay(.3);
 		m_drive.driveCartesian(0,0,0);
 		Timer.delay(1);
 	    firstTime = false;
     }
-  }
+  
 
   @Override
   public void teleopPeriodic(){
 //inverse sine scaling for acceleration
-	if (stick1.getRawButton(B_BUTTON)){
-		flipped = -flipped;
+	if (stick1.getRawButton(Y_BUTTON)){
+		ahrs.reset();
 	}
+	
 
-	  double x = stick1.getRawAxis(LEFT_JOYSTICK_HORIZONTAL)*.5;
-	  double y = stick1.getRawAxis(LEFT_JOYSTICK_VERTICAL)*-1 *.5;
+	  double x = stick1.getRawAxis(LEFT_JOYSTICK_HORIZONTAL)*.25;
+	  double y = stick1.getRawAxis(LEFT_JOYSTICK_VERTICAL)*-1*.25;
 	  //right trigger rotates clockwise, left trigger rotates counterclockwise. if both are depressed, no rotation
 	  double z = (stick1.getRawAxis(RIGHT_TRIGGER) > 0 && stick1.getRawAxis(LEFT_TRIGGER) > 0) ? 0.0 : stick1.getRawAxis(RIGHT_TRIGGER) * .5 + stick1.getRawAxis(LEFT_TRIGGER) * -.5;
 
@@ -243,7 +314,7 @@ public class Robot extends TimedRobot{
 	      hopper.set(0);
 	  }
 
-	  System.out.println(testinput.getValue());
+	  System.out.println(ahrs.getAngle());
 
 	//   if (stick2.getRawButton(2)){
 	// 	  climb.set(.7);

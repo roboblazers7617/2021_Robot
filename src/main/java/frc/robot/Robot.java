@@ -79,8 +79,6 @@ public class Robot extends TimedRobot{
 			System.out.println(ahrs.getAngle());
 			if(Math.abs(ahrs.getAngle())>0){
 				m_drive.driveCartesian(.25, 0, -ahrs.getAngle()/50);
-				
-				// m_drive.driveCartesian(.25, 0, 0);
 			}
 			else{
 				m_drive.driveCartesian(.25, 0, 0);
@@ -88,6 +86,136 @@ public class Robot extends TimedRobot{
 			Timer.delay(.01);
 		}
 	}
+
+	void driveCartesianRotationalCorrection(double ySpeed, double xSpeed, float time){
+		ahrs.reset();
+		for(float x=0;x<time;x+=.01){
+			m_drive.driveCartesian(ySpeed, xSpeed, -ahrs.getAngle()/50);
+			Timer.delay(.01);
+		}
+	}
+	void printNavX2Info(){
+		System.out.println("Angle: "+ahrs.getAngle());
+		System.out.println("Pitch: "+ahrs.getPitch()+" Roll: "+ahrs.getRoll()+" Yaw: "+ahrs.getYaw());
+		System.out.println("XAccel: "+ahrs.getWorldLinearAccelX()+" YAccel: "+ahrs.getWorldLinearAccelY()+" ZAccel: "+ahrs.getWorldLinearAccelZ());
+		System.out.println("XVelocity: "+ahrs.getVelocityX()+" YVelocity: "+ahrs.getVelocityY()+" ZVelocity: "+ahrs.getVelocityZ());
+		System.out.println("XDisp: "+ahrs.getDisplacementX()+" YDisp: "+ahrs.getDisplacementY()+" ZDisp: "+ahrs.getDisplacementZ());
+	}
+
+	void DRIFT(float time, float radiusratio){
+		m_drive.driveCartesian(-.35, 0, .35*radiusratio);
+		Timer.delay(time);
+		m_drive.driveCartesian(0, 0, 0);
+	}
+
+
+	// void correctAngle(){
+	// 	while(Math.abs(ahrs.getAngle())>1){
+	// 		System.out.println(ahrs.getAngle());
+	// 		m_drive.driveCartesian(0, 0, -ahrs.getAngle()/(5*ahrs.getAngle()));
+	// 		Timer.delay(.01);
+	// 	}
+	// }
+		void SlalomPath() {
+		ahrs.reset();
+		m_drive.setSafetyEnabled(false);
+		m_drive.driveCartesian(0, .25, 0);
+		Timer.delay(.8);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
+		driveCartesianRotationalCorrection(-.25, 0.0, 2.3f);
+	//	m_drive.driveCartesian(0, 0, .45);
+		//Timer.delay(Math.abs(ahrs.getAngle()/200.0f));
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(.2);
+		m_drive.driveCartesian(0, .25, 0);
+		Timer.delay(3.5);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
+		driveCartesianRotationalCorrection(.25, 0, 2.3f);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(.2);
+		m_drive.driveCartesian(0, .25, 0);
+		Timer.delay(.73);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
+		driveCartesianRotationalCorrection(-.25, 0, 2.3f);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(.2);
+		m_drive.driveCartesian(0, -.25, 0);
+		Timer.delay(.75);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
+		driveCartesianRotationalCorrection(.25, 0, 2.4f);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(.2);
+		m_drive.driveCartesian(0, -.25, 0);
+		Timer.delay(3.2);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(1);
+		driveCartesianRotationalCorrection(-.25, 0, 2.3f);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(.2);
+		m_drive.driveCartesian(0, -.25, 0);
+		Timer.delay(.3);
+		m_drive.driveCartesian(0,0,0);
+		Timer.delay(10);
+	    firstTime = false;
+		}
+		
+		void BouncePath(){
+			ahrs.reset();
+			m_drive.setSafetyEnabled(false);
+			driveCartesianRotationalCorrection(-.25, 0, 2.4f);
+			m_drive.driveCartesian(0, 0, 0);
+			Timer.delay(.1);
+			m_drive.driveCartesian(0, -.25, 0);
+			Timer.delay(.5);
+			m_drive.driveCartesian(0, 0, 0);
+			Timer.delay(1);
+			m_drive.driveCartesian(0, .25, 0);
+			Timer.delay(.25);
+			driveCartesianRotationalCorrection(-.25, .3, 1.2f);
+			m_drive.driveCartesian(0, .25, 0);
+			Timer.delay(.05);
+			driveCartesianRotationalCorrection(-.25, .3, .4f);
+			m_drive.driveCartesian(0, 0, 0);
+			Timer.delay(.1);
+			driveCartesianRotationalCorrection(-.25, 0, 1.7f);
+			m_drive.driveCartesian(0, 0, 0);
+			Timer.delay(.1);
+			m_drive.driveCartesian(0, -.25, 0);
+			Timer.delay(2);
+			m_drive.driveCartesian(0, 0, 0);
+			Timer.delay(1);
+			m_drive.driveCartesian(0, .25, 0);
+			Timer.delay(2.5);
+			m_drive.driveCartesian(0, 0, 0);
+			Timer.delay(.1);
+			driveCartesianRotationalCorrection(-.25, 0, 3.1f);
+			m_drive.driveCartesian(0, 0, 0);
+			Timer.delay(.1);
+			m_drive.driveCartesian(0, -.25, 0);
+			Timer.delay(2.5);
+			m_drive.driveCartesian(0, 0, 0);
+			Timer.delay(.1);
+			m_drive.driveCartesian(0, .25, 0);
+			Timer.delay(1);
+			driveCartesianRotationalCorrection(-.25, 0, 2.4f);
+			m_drive.driveCartesian(0, 0, 0);
+		}
+
+		void BarrelRacingPath(){
+
+		}
+
+		void APath(){
+
+		}
+
+		void BPath(){
+
+		}
 
   @Override
   public void robotInit(){
@@ -109,138 +237,29 @@ public class Robot extends TimedRobot{
 			//run Blue course
 		}
 		
-		m_drive.setSafetyEnabled(false);
+		// m_drive.setSafetyEnabled(false);
 
-		// //Gree
 	
-		}
-
+	}
 		ahrs.reset();
-		// testingDynamicCorrection(7);
-		// // ahrs.reset();
-		// // m_drive.driveCartesian(.25, 0, 0, ahrs.getAngle());
-		// // Timer.delay(7);
-		// m_drive.driveCartesian(0, 0, 0);
-// m_drive.driveCartesian(.25, 0, 0);
-// Timer.delay(7);
-// m_drive.driveCartesian(0, 0, 0);
-// Timer.delay(0);
-
 		m_drive.setSafetyEnabled(false);
-		ahrs.reset();
-		//Slalom auto
-		m_drive.setSafetyEnabled(false);
-		m_drive.driveCartesian(0, .25, 0);
-		Timer.delay(.7);
+		driveCartesianRotationalCorrection(-.45, 0, 1.9f);
+		driveCartesianRotationalCorrection(-.45, -.2, .2f);
+		driveCartesianRotationalCorrection(-.45, 0, .2f);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(0.1);
+		DRIFT(5f, .5f);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
-		// m_drive.driveCartesian(0, 0, -.45);
-		// Timer.delay(.47);
-		m_drive.driveCartesian(-.25, 0, 0);
-		Timer.delay(2);
+		driveCartesianRotationalCorrection(-.45, -.25, 1.8f);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(.1);
-		m_drive.driveCartesian(0, 0, .45);
-		Timer.delay(Math.abs(ahrs.getAngle()/200.0f));
-		m_drive.driveCartesian(0, .25, 0);
-		Timer.delay(3.5);
-		m_drive.driveCartesian(0, 0, 0);
-		Timer.delay(1);
-		//Turns
-		// m_drive.driveCartesian(0, 0, .45);
-		// Timer.delay(.44);
-		// m_drive.driveCartesian(0, .25, 0);
-		// Timer.delay(3);
-		// m_drive.driveCartesian(0, 0, 0);
-		// Timer.delay(2);
-		// m_drive.driveCartesian(0, -.25, 0);
-		// Timer.delay(.1);
-		// m_drive.driveCartesian(0,0,0);
-		// Timer.delay(1);
-		// //m_drive.driveCartesian(0, 0, .45);
-		// //Timer.delay(.45);
-		 testingDynamicCorrection(1.8f);
-		 m_drive.driveCartesian(0, 0, 0);
-		 Timer.delay(.1);
-		m_drive.driveCartesian(0, 0, 0);
-		Timer.delay(1);
-		m_drive.driveCartesian(0, .25, 0);
-		Timer.delay(.75);
-		m_drive.driveCartesian(0, 0, 0);
-		Timer.delay(1);
-		//turns
-		//m_drive.driveCartesian(0, 0, -.45);
-		//Timer.delay(.47);
-		// m_drive.driveCartesian(0, .25, 0);
-		//  Timer.delay(.75);
-		//  m_drive.driveCartesian(0, 0, 0);
-		// Timer.delay(1);
-		//  m_drive.driveCartesian(0, 0, -.45);
-		//  Timer.delay(.47);
-		//  m_drive.driveCartesian(0, .25, 0);
-		//  Timer.delay(.75);
-		//  m_drive.driveCartesian(0, 0, 0);
-		// Timer.delay(1);
-		// m_drive.driveCartesian(0, 0, -.45);
-		// Timer.delay(.47);
-		// m_drive.driveCartesian(0, .25, 0);
-		// Timer.delay(.75);
-		// m_drive.driveCartesian(0, 0, 0);
-		// Timer.delay(1);
-		// m_drive.driveCartesian(0, 0, -.45);
-		// Timer.delay(.47);
-		// m_drive.driveCartesian(0, .25, 0);
-		// Timer.delay(.74);
-		// m_drive.driveCartesian(0, 0, 0);
-		// Timer.delay(1);
-		// m_drive.driveCartesian(0, 0, .45);
-		// Timer.delay(.49);
-		// m_drive.driveCartesian(0, .25, 0);
-		// Timer.delay(3.1);
-		// m_drive.driveCartesian(0, 0, 0);
-		// Timer.delay(2);
-		// m_drive.driveCartesian(0, 0, .45);
-		// Timer.delay(.46);
-		// m_drive.driveCartesian(0, .25, 0);
-		// Timer.delay(.75);
-		// m_drive.driveCartesian(0, 0, 0);
-		// Timer.delay(1);
-		// m_drive.driveCartesian(0, 0, -.45);
-		// Timer.delay(.48);
-		// m_drive.driveCartesian(0, .25, 0);
-		// Timer.delay(.3);
-		// m_drive.driveCartesian(0, 0, 0);
-		// Timer.delay(1);
-		// m_drive.driveCartesian(0, 0, 0);
-		// Timer.delay(1);
-		 m_drive.driveCartesian(-.25, 0, 0);
-		 Timer.delay(2);
-		 m_drive.driveCartesian(0, 0, .45);
-		 Timer.delay(Math.abs(ahrs.getAngle()/200.0f));
-		m_drive.driveCartesian(0, -.25, 0);
-		Timer.delay(.75);
-		m_drive.driveCartesian(0, 0, 0);
-		Timer.delay(1);
-		testingDynamicCorrection(1.8f);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(.1);
-		m_drive.driveCartesian(0, 0, .45);
-		Timer.delay(Math.abs(ahrs.getAngle()/200.0f));
-		m_drive.driveCartesian(0, -.25, 0);
-		Timer.delay(3.5);
-		m_drive.driveCartesian(0, 0, 0);
-		Timer.delay(1);
-		m_drive.driveCartesian(-.25, 0, 0);
-		Timer.delay(2.4);
-		m_drive.driveCartesian(0, 0, 0);
-		Timer.delay(.1);
-		m_drive.driveCartesian(0, 0, .45);
-		Timer.delay(Math.abs(ahrs.getAngle()/200.0f));
-		m_drive.driveCartesian(0, -.25, 0);
-		Timer.delay(.3);
-		m_drive.driveCartesian(0,0,0);
-		Timer.delay(1);
-	    firstTime = false;
+		DRIFT(5f, -.5f);
+		Timer.delay(100000);
+		m_drive.setSafetyEnabled(true);
+		
     }
   
 
@@ -252,8 +271,8 @@ public class Robot extends TimedRobot{
 	}
 	
 
-	  double x = stick1.getRawAxis(LEFT_JOYSTICK_HORIZONTAL)*.25;
-	  double y = stick1.getRawAxis(LEFT_JOYSTICK_VERTICAL)*-1*.25;
+	  double x = stick1.getRawAxis(LEFT_JOYSTICK_HORIZONTAL)*.5;
+	  double y = stick1.getRawAxis(LEFT_JOYSTICK_VERTICAL)*-1*.5;
 	  //right trigger rotates clockwise, left trigger rotates counterclockwise. if both are depressed, no rotation
 	  double z = (stick1.getRawAxis(RIGHT_TRIGGER) > 0 && stick1.getRawAxis(LEFT_TRIGGER) > 0) ? 0.0 : stick1.getRawAxis(RIGHT_TRIGGER) * .5 + stick1.getRawAxis(LEFT_TRIGGER) * -.5;
 
@@ -269,34 +288,38 @@ public class Robot extends TimedRobot{
 		  intake.set(0);
 	  }
 
-	  if (stick2.getRawButton(LEFT_BUMPER)){
-		  tower.set(.3);
-	  }
-	  else if (stick2.getRawAxis(LEFT_TRIGGER) > 0){
-		  tower.set(-.3);
+	  if (stick2.getRawAxis(LEFT_TRIGGER) > 0){
+		  tower.set(-.5);
 	  }
 	  else{
 		  tower.set(0);
 	  }
     if (stick2.getRawButton(A_BUTTON)) {
-		//For-the-10/15-distance
-		shooter.set(.4);
-		  shooterLeft.set(-.4);
+		//Green
+		tower.set(1);
+		shooter.set(.38);
+		shooterLeft.set(-.38);
 	  }
 	  else if (stick2.getRawButton(X_BUTTON)) {
-		//Farther Distances
-		shooter.set(.29);
-		shooterLeft.set(-.29);
+		//Yellow
+		tower.set(.5);
+		shooter.set(.3);
+		shooterLeft.set(-.3);
 	  }
 	  else if (stick2.getRawButton(Y_BUTTON)){
-		  //15 Distance?
-		  shooter.set(.29);
-		  shooterLeft.set(-.29);
+		  //Blue
+		  tower.set(1);
+		  shooter.set(.295);
+		  shooterLeft.set(-.295);
 	  }
 	  else if (stick2.getRawButton(B_BUTTON)){
-		  //25?????
-		  shooter.set(.3);
-		  shooterLeft.set(-.3);
+		  //Red
+		  
+		  shooter.set(.295);
+		  shooterLeft.set(-.295);
+		  Timer.delay(1);
+		  tower.set(.7);
+		  Timer.delay(2);
 	  }
 	  else {
 		  shooter.set(0);

@@ -17,6 +17,10 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SPI;
 import java.lang.System;
 import java.sql.Driver;
+import java.sql.DriverAction;
+
+import javax.xml.namespace.QName;
+
 import java.lang.Math;
 
 //the A button is
@@ -128,24 +132,24 @@ public class Robot extends TimedRobot{
 		void SlalomPath() {
 		ahrs.reset();
 		m_drive.setSafetyEnabled(false);
-		m_drive.driveCartesian(0, .25, 0);
-		Timer.delay(.8);
+		driveCartesianRotationalCorrection(0, 1, .25f);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
-		driveCartesianRotationalCorrection(-.25, 0.0, 2.3f);
+		driveCartesianRotationalCorrection(0, -1, .25f);
+		m_drive.driveCartesian(0, 0, 0);
+		Timer.delay(.5);
+		driveCartesianRotationalCorrection(-1, 0, .5f);
 	//	m_drive.driveCartesian(0, 0, .45);
 		//Timer.delay(Math.abs(ahrs.getAngle()/200.0f));
-		m_drive.driveCartesian(0, 0, 0);
+		m_drive.driveCartesian(0, 0, .45);
 		Timer.delay(.2);
-		m_drive.driveCartesian(0, .25, 0);
-		Timer.delay(3.5);
+		m_drive.driveCartesian(0, 1, 0);
+		Timer.delay(.5);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
-		driveCartesianRotationalCorrection(.25, 0, 2.3f);
-		m_drive.driveCartesian(0, 0, 0);
-		Timer.delay(.2);
-		m_drive.driveCartesian(0, .25, 0);
-		Timer.delay(.73);
+		driveCartesianRotationalCorrection(1, 0, .6f);
+		driveCartesianRotationalCorrection(0, 1, .2f);
+		driveCartesianRotationalCorrection(0, -1, .2f);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
 		driveCartesianRotationalCorrection(-.25, 0, 2.3f);
@@ -246,7 +250,6 @@ public class Robot extends TimedRobot{
 		Timer.delay(1.2);
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
-		
 		m_drive.driveCartesian(0, 0, 0);
 		Timer.delay(1);
 		// driveCartesianRotationalCorrection(-.25, 0, 2.3f);
@@ -275,31 +278,110 @@ public class Robot extends TimedRobot{
 		}
 
 		void APath(){
-			System.out.println("shit sensor: "+ultrasonicsensor.getValue()+" good sensor: "+proximitySensor.getValue());
-			if(ultrasonicsensor.getValue()<4000&&proximitySensor.getValue()<600){
-				driveCartesianRotationalCorrection(-.25, 0, .2f);
-				driveCartesianRotationalCorrection(0, -.5, .5f);
-				driveCartesianRotationalCorrection(0, .5, .5f);
+			System.out.println("Nice Sensor: " + proximitySensor.getValue());
+			System.out.println("Shitty Sensor: " + ultrasonicsensor.getValue());
+			ahrs.reset();
+			if(ultrasonicsensor.getValue()>4000&&proximitySensor.getValue()<400){
+				System.out.println("Red Route");
+				m_drive.driveCartesian(0, 0, 0);
+				Timer.delay(.1);
+				driveCartesianRotationalCorrection(0, -.55, .3f);
+				driveCartesianRotationalCorrection(0, .55, .4f);
 				intake.set(.5);
 				m_drive.driveCartesian(0, 0, .25);
-				Timer.delay(.07);
-				driveCartesianRotationalCorrection(0, -.20, 2.3f);
-				driveCartesianRotationalCorrection(-.25, 0, .9f);
-				driveCartesianRotationalCorrection(0, -.20, .9f);
+				Timer.delay(.07); 
+				// m_drive.driveCartesian(0, 0, 0);
+				// Timer.delay(.5); 
+				driveCartesianRotationalCorrection(0, -.1, .7f);
+				driveCartesianRotationalCorrection(0, -.2, 1.7f);
+				driveCartesianRotationalCorrection(-.25, 0, 1.1f);
+				driveCartesianRotationalCorrection(0, -.20, 1.3f);
 				driveCartesianRotationalCorrection(.25, 0, 3f);
-				driveCartesianRotationalCorrection(0, -.20, 1f);
-				driveCartesianRotationalCorrection(-.5, 0, .5f);
-				driveCartesianRotationalCorrection(0, -1, .1f);
+				driveCartesianRotationalCorrection(0, -.20, 1.1f);
+				driveCartesianRotationalCorrection(.25, 0, .2f);
+				driveCartesianRotationalCorrection(0, -1, .15f);
 				m_drive.driveCartesian(0, 0, 0);
-				Timer.delay(999999999);
+				Timer.delay(1);
 			}
-			else if(ultrasonicsensor.getValue()<1700&&proximitySensor.getValue()<800){
-				System.out.println("route yellow");
+			else if(ultrasonicsensor.getValue()>4000&&proximitySensor.getValue()<600){
+				System.out.println("Blue Route");
+				driveCartesianRotationalCorrection(0, -.7, .3f);
+				driveCartesianRotationalCorrection(0, .55, .4f);
+				m_drive.driveCartesian(0, 0, 0);
+				Timer.delay(.2);
+				driveCartesianRotationalCorrection(0, -.5, .6f);
+				intake.set(.5);
+				driveCartesianRotationalCorrection(0, -.2, 2.3f);
+				driveCartesianRotationalCorrection(.25, 0, 3.1f);
+				driveCartesianRotationalCorrection(0, -.25, .8f);
+				driveCartesianRotationalCorrection(-.25, 0, 1.3f);
+				driveCartesianRotationalCorrection(0, -.25, .6f);
 			}
 		}
 
+		
+	
 		void BPath(){
-
+			System.out.println("nice sensor: " + proximitySensor.getValue());
+				if(ultrasonicsensor.getValue()>4000&&proximitySensor.getValue()<500){
+				driveCartesianRotationalCorrection(0, -.6, .45f);
+				driveCartesianRotationalCorrection(0, .6, .55f);
+				m_drive.driveCartesian(0, 0, .45);
+				Timer.delay(.3);
+				m_drive.driveCartesian(0, -.1, 0);
+				Timer.delay(.7);
+				intake.set(.5);
+				m_drive.driveCartesian(0, -.25, 0);
+				Timer.delay(2.3);
+				m_drive.driveCartesian(0, -.15, 0);
+				Timer.delay(.7);
+				m_drive.driveCartesian(0, 0, 0);
+				Timer.delay(.1);
+				m_drive.driveCartesian(0, 0, -.45);
+				Timer.delay(.4);
+				m_drive.driveCartesian(0, -.35, 0); 
+				Timer.delay(1.2);
+				m_drive.driveCartesian(0, -.15, 0);
+				Timer.delay(.7);
+				m_drive.driveCartesian(0, 0, .45);
+				Timer.delay(.3);
+				m_drive.driveCartesian(0, -.4, 0);
+				Timer.delay(.3);
+				m_drive.driveCartesian(0, 0, 0);
+				Timer.delay(1);
+				m_drive.driveCartesian(0, 0, .45);
+				Timer.delay(.2);
+				m_drive.driveCartesian(0, -.4, 0);
+				Timer.delay(.3);
+				m_drive.driveCartesian(0, 0, 0);
+				Timer.delay(1);
+				}
+				else if(ultrasonicsensor.getValue()>4000&&proximitySensor.getValue()<2700){
+				// driveCartesianRotationalCorrection(0, -.5, 1.4f);
+				driveCartesianRotationalCorrection(0, .5, .3f);
+				m_drive.driveCartesian(0, 0, 0);
+				Timer.delay(1);
+				m_drive.driveCartesian(0, 0, 1);
+				Timer.delay(.3);
+				m_drive.driveCartesian(0, 0, 0);
+				Timer.delay(.5);
+				// driveCartesianRotationalCorrection(0, .5, 1f);
+				intake.set(.5);
+				m_drive.driveCartesian(-.25, 0, 0);
+				Timer.delay(1.1);
+				driveCartesianRotationalCorrection(0, -.2, .9f);
+				m_drive.driveCartesian(.25, 0, 0);
+				Timer.delay(2.4);
+				driveCartesianRotationalCorrection(0, -.2, 1.5f);
+				m_drive.driveCartesian(-.25, 0, 0);
+				Timer.delay(2.4);
+				driveCartesianRotationalCorrection(0, -.2, 1.3f);
+				m_drive.driveCartesian(.25, 0, 0);
+				Timer.delay(1.1);
+				driveCartesianRotationalCorrection(0, -.5, .2f);
+				m_drive.driveCartesian(0, 0, 0);
+				Timer.delay(1);
+				}
 		}
 
   @Override
@@ -311,24 +393,14 @@ public class Robot extends TimedRobot{
 
   @Override
   public void autonomousPeriodic(){
-	  boolean isRed = false;
-
-		
-    if(firstTime == true){
-		if (isRed == true){
-			//run Red course
-		}
-		else{
-			//run Blue course
-		}
-		
-		// m_drive.setSafetyEnabled(false);
-
-	
+	m_drive.setSafetyEnabled(false);
+	APath();
+	m_drive.setSafetyEnabled(true);
+   
 	}
-		ahrs.reset();
-		m_drive.setSafetyEnabled(false);
-		APath();
+		// ahrs.reset();
+		// m_drive.setSafetyEnabled(false);
+		// BPath();
 		// for(int x=0;x<10000000;x++){
 			// System.out.println(proximitySensor.getValue());
 			//Path A red route  blocks + blocks
@@ -346,7 +418,7 @@ public class Robot extends TimedRobot{
 
 			// Timer.delay(.1);
 		// }
-	}
+	
 
   
 
@@ -358,8 +430,8 @@ public class Robot extends TimedRobot{
 	}
 	
 
-	  double x = stick1.getRawAxis(LEFT_JOYSTICK_HORIZONTAL)*.4;
-	  double y = stick1.getRawAxis(LEFT_JOYSTICK_VERTICAL)*-1*.4;
+	  double x = stick1.getRawAxis(LEFT_JOYSTICK_HORIZONTAL)*.7;
+	  double y = stick1.getRawAxis(LEFT_JOYSTICK_VERTICAL)*-1*.7;
 	  //right trigger rotates clockwise, left trigger rotates counterclockwise. if both are depressed, no rotation
 	  double z = (stick1.getRawAxis(RIGHT_TRIGGER) > 0 && stick1.getRawAxis(LEFT_TRIGGER) > 0) ? 0.0 : stick1.getRawAxis(RIGHT_TRIGGER) * .35 + stick1.getRawAxis(LEFT_TRIGGER) * -.35;
 
@@ -393,43 +465,63 @@ public class Robot extends TimedRobot{
 	  if (stick2.getRawAxis(LEFT_TRIGGER) > 0){
 		  tower.set(-.5);
 	  }
+	  else if (stick2.getRawButton(LEFT_BUMPER)){
+		  tower.set(.5);
+	  }
 	  else{
 		  tower.set(0);
 	  }
     if (stick2.getRawButton(A_BUTTON)) {
 		//Green
-		
+		hopper.set(-.5);
+		Timer.delay(.1);
 		shooter.set(.38);
 		shooterLeft.set(-.38);
-		Timer.delay(.75);
+		//shooter.setVoltage(4.75);
+		//shooterLeft.setVoltage(-4.75);
+		Timer.delay(1.1);
 		tower.set(1);
-		Timer.delay(.75);
+		Timer.delay(.5);
 	  }
-	  else if (stick2.getRawButton(X_BUTTON)) {
+	  else if (stick2.getRawButton(Y_BUTTON)) {
 		//Yellow
-		shooter.set(.3);
-		shooterLeft.set(-.3);
-		Timer.delay(.75);
-		tower.set(.5);
-		Timer.delay(.75);
+		hopper.set(-.5);
+		Timer.delay(.15);
+		shooter.set(1);
+		shooterLeft.set(-1);
+		// //shooter.set(.3);
+		// //shooterLeft.set(-.3);
+		// shooter.setVoltage(3.625);
+		// shooterLeft.setVoltage(-3.625);
+		Timer.delay(.73);
+		tower.set(1);
+		//tower.set(.5);
+		Timer.delay(.73);
 	  }
-	  else if (stick2.getRawButton(Y_BUTTON)){
+	  else if (stick2.getRawButton(X_BUTTON)){
 		  //Blue
-		  shooter.set(.295);
-		  shooterLeft.set(-.295);
-		  Timer.delay(.75);
-		  tower.set(1);
-		  Timer.delay(.75);
+		hopper.set(-.6);
+		Timer.delay(.17);
+		  //shooter.set(.3);
+		//shooterLeft.set(-.3);
+		shooter.setVoltage(3.625);  
+		shooterLeft.setVoltage(-3.625);
+		Timer.delay(.74);
+		   tower.set(.6);
+		   Timer.delay(.74);
 
 	  }
 	  else if (stick2.getRawButton(B_BUTTON)){
 		  //Red
-		  
-		  shooter.set(.295);
-		  shooterLeft.set(-.295);
+		  hopper.set(-.6);
+		  Timer.delay(.15);
+		 // shooter.set(.31);
+		  //shooterLeft.set(-.31);
+		 shooter.setVoltage(3.825);
+		 shooterLeft.setVoltage(-3.825);
 		  Timer.delay(1);
-		  tower.set(.7);
-		  Timer.delay(.75);
+		tower.set(.5);
+		Timer.delay(.74);
 	  }
 	  else {
 		  shooter.set(0);
@@ -447,7 +539,7 @@ public class Robot extends TimedRobot{
 	      hopper.set(0);
 	  }
 
-	  System.out.println(ahrs.getAngle());
+	  
 
 	//   if (stick2.getRawButton(2)){
 	// 	  climb.set(.7);
@@ -457,6 +549,6 @@ public class Robot extends TimedRobot{
 	//   }
 	//   else{
 	// 	  climb.set(0);
-	//   }
+	//   }  
   }
 }
